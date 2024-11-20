@@ -1,0 +1,5 @@
+esp D1 - A4
+    D2 - A5
+
+quy định dây vàng là GND
+	 dây đổ là 5V + 

@@ -1,0 +1,103 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <ESP8266WiFi.h>
+#include <WebSocketsClient.h> //https://github.com/Links2004/arduinoWebSockets
+
+WebSocketsClient webSocket;
+
+const char* ssid = "NgoMinhHoang"; //Đổi thành wifi của bạn
+const char* password = "hieu90hp89"; //Đổi pass luôn
+const char* ip_host = "192.168.1.6"; //Đổi luôn IP host của PC nha
+const uint16_t port = 3000; //Port thích đổi thì phải đổi ở server nữa
+
+String Cambien="";
+String Trangthai="";
+String Chedo;
+
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+  Chedo=(char*)payload;
+  switch (type) {
+    case WStype_DISCONNECTED:
+      Serial.printf("[WSc] Disconnected!\n");
+      break;
+    case WStype_CONNECTED:
+      {
+        Serial.printf("[WSc] Connected to url: %s\n", payload);
+      }
+      break;
+    case WStype_TEXT:
+//      Serial.printf("[WSc] get text: %s\n", payload);
+//      if (strcmp((char*)payload, "A0B") == 0) {
+//      Serial.println((char*)payload);
+//      } else if (strcmp((char*)payload, "A1B") == 0) {
+//        
+//      Serial.println((char*)payload);
+//      } else if (strcmp((char*)payload, "C0D") == 0) {
+//        
+//      Serial.println((char*)payload);
+//      } else if (strcmp((char*)payload, "C1D") == 0) {
+//       Serial.println((char*)payload);
+//      }
+      break;
+    case WStype_BIN:
+      Serial.println((char*)payload);
+      //Serial.printf("[WSc] get binary length: %u\n", length);
+      break;
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  Wire.begin(D1,D2);
+  
+  Serial.println("ESP8266 Websocket Client");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  webSocket.begin(ip_host, port);
+  webSocket.onEvent(webSocketEvent);
+}
+
+void Guidulieu_Arduino(){
+  Wire.beginTransmission(8); /* begin with device address 8 */
+  Wire.write(Chedo.c_str());  /* sends hello string */
+  Wire.endTransmission();    /* stop transmitting */
+}
+void Guidulieu_Server(){
+  static unsigned long l = 0;
+  unsigned long t = millis();
+  String str="";
+  Wire.requestFrom(8,4);
+  while(Wire.available()){
+    char c = Wire.read();   
+    str+= c;
+  }
+  if((t - l) > 1500){
+     if(str=="td.."){
+    webSocket.sendTXT(str);
+  }
+  if(str=="tcmc"){
+    webSocket.sendTXT(str);
+  }
+  if(str=="tddc"){
+    webSocket.sendTXT(str);
+  }
+  }
+ 
+ 
+}
+void loop() {
+//    static unsigned long l = 0;
+//    unsigned long t = millis();
+//    if((t - l) > 1500) {
+//      
+//        l = t;
+//    }
+  Guidulieu_Arduino();
+  Guidulieu_Server();
+  webSocket.loop();
+
+}
