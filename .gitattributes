@@ -1,0 +1,25 @@
+# Ngôn ngữ C#
+*.cs linguist-language=C#
+
+# Ngôn ngữ C++
+*.cpp linguist-language=C++
+*.h linguist-language=C++
+
+# Ngôn ngữ Python
+*.py linguist-language=Python
+
+# Ngôn ngữ JavaScript
+*.js linguist-language=JavaScript
+
+# Ngôn ngữ HTML
+*.html linguist-language=HTML
+*.htm linguist-language=HTML
+
+# Ngôn ngữ CSS
+*.css linguist-language=CSS
+
+# Ngôn ngữ Java
+*.java linguist-language=Java
+
+# Ngôn ngữ Ruby
+*.rb linguist-language=Ruby
